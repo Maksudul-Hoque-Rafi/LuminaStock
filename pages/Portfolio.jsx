@@ -12,8 +12,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { Plus, Trash2, TrendingUp, Wallet, DollarSign } from "lucide-react";
-import { PortfolioItem } from "../types";
+import { Plus, Trash2, Wallet, DollarSign } from "lucide-react";
 import { MOCK_STOCKS } from "../services/mockData";
 import {
   getPortfolio,
@@ -23,19 +22,16 @@ import {
 } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
 
-const Portfolio: React.FC = () => {
-  const [holdings, setHoldings] = useState<PortfolioItem[]>([]);
-  const [currentPrices, setCurrentPrices] = useState<Record<string, number>>(
-    {}
-  );
+const Portfolio = () => {
+  const [holdings, setHoldings] = useState([]);
+  const [currentPrices, setCurrentPrices] = useState({});
   const [cashBalance, setCashBalance] = useState(0);
 
   const [showTradeModal, setShowTradeModal] = useState(false);
-  const [selectedStockForTrade, setSelectedStockForTrade] =
-    useState<PortfolioItem | null>(null);
+  const [selectedStockForTrade, setSelectedStockForTrade] = useState(null);
 
   // Mock Growth Data
-  const [growthData, setGrowthData] = useState<any[]>([]);
+  const [growthData, setGrowthData] = useState([]);
 
   useEffect(() => {
     loadPortfolio();
@@ -48,8 +44,8 @@ const Portfolio: React.FC = () => {
     setCashBalance(cash);
 
     // Hydrate with current prices from mock data
-    const prices: Record<string, number> = {};
-    saved.forEach((item: PortfolioItem) => {
+    const prices = {};
+    saved.forEach((item) => {
       const stock = MOCK_STOCKS.find((s) => s.symbol === item.symbol);
       if (stock) {
         prices[item.symbol] = stock.price;
@@ -59,7 +55,7 @@ const Portfolio: React.FC = () => {
 
     // Calculate Portfolio Value (Stocks only) for graph
     const portfolioVal = saved.reduce(
-      (sum: number, item: PortfolioItem) =>
+      (sum, item) =>
         sum + item.quantity * (prices[item.symbol] || item.avgBuyPrice),
       0
     );
@@ -94,12 +90,12 @@ const Portfolio: React.FC = () => {
     setGrowthData(data);
   };
 
-  const openTradeModal = (item: PortfolioItem) => {
+  const openTradeModal = (item) => {
     setSelectedStockForTrade(item);
     setShowTradeModal(true);
   };
 
-  const handleTrade = (type: "buy" | "sell", quantity: number) => {
+  const handleTrade = (type, quantity) => {
     if (!selectedStockForTrade) return;
     try {
       const currentPrice =
@@ -114,14 +110,14 @@ const Portfolio: React.FC = () => {
       setHoldings(updated);
       setShowTradeModal(false);
       loadPortfolio(); // Refresh data/charts and cash balance
-    } catch (e: any) {
+    } catch (e) {
       alert(e.message);
     }
   };
 
-  const removeHolding = (symbol: string) => {
+  const removeHolding = (symbol) => {
     if (
-      confirm(
+      window.confirm(
         "Are you sure? This will remove the stock from your view but won't sell it for cash (use Trade > Sell for that)."
       )
     ) {
@@ -166,11 +162,6 @@ const Portfolio: React.FC = () => {
     "#ec4899",
     "#94a3b8",
   ];
-
-  if (holdings.length === 0 && cashBalance === 10000) {
-    // Default state
-    // Render a welcome state but show cash
-  }
 
   return (
     <div className="space-y-8 relative">
@@ -279,10 +270,7 @@ const Portfolio: React.FC = () => {
                   width={50}
                 />
                 <Tooltip
-                  formatter={(value: number) => [
-                    `$${value.toFixed(2)}`,
-                    "Value",
-                  ]}
+                  formatter={(value) => [`$${value.toFixed(2)}`, "Value"]}
                   contentStyle={{
                     borderRadius: "8px",
                     border: "none",
@@ -329,7 +317,7 @@ const Portfolio: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value: number) => `$${value.toFixed(2)}`}
+                    formatter={(value) => `$${value.toFixed(2)}`}
                     contentStyle={{
                       borderRadius: "8px",
                       border: "none",
@@ -354,7 +342,7 @@ const Portfolio: React.FC = () => {
                             ? "#10b981"
                             : COLORS[index % COLORS.length],
                       }}
-                    ></div>
+                    />
                     <span className="text-slate-600">{entry.name}</span>
                   </div>
                   <span className="font-medium text-slate-900">
@@ -382,7 +370,8 @@ const Portfolio: React.FC = () => {
         {holdings.length === 0 ? (
           <div className="p-8 text-center text-slate-500">
             No stocks in portfolio. You have{" "}
-            <strong>${cashBalance.toLocaleString()}</strong> available to trade.
+            <strong>${cashBalance.toLocaleString()}</strong> available to
+            trade.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -479,3 +468,5 @@ const Portfolio: React.FC = () => {
 };
 
 export default Portfolio;
+
+

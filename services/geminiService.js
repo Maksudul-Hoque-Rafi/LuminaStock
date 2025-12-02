@@ -1,10 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
-import { Stock, NewsArticle } from "../types";
 
-const apiKey = process.env.API_KEY || "AIzaSyCKD6qAm_sRMg-Ray9jv1Vr7co15NljYZY";
+const apiKey =
+  process.env.API_KEY || "AIzaSyCKD6qAm_sRMg-Ray9jv1Vr7co15NljYZY";
 const ai = new GoogleGenAI({ apiKey });
 
-export const getAIStockAnalysis = async (stock: Stock): Promise<string> => {
+export const getAIStockAnalysis = async (stock) => {
   if (!apiKey) return "AI Insights unavailable (API Key missing).";
 
   try {
@@ -33,7 +33,7 @@ export const getAIStockAnalysis = async (stock: Stock): Promise<string> => {
   }
 };
 
-export const getAILearningContent = async (topic: string): Promise<string> => {
+export const getAILearningContent = async (topic) => {
   if (!apiKey) return "Learning content unavailable (API Key missing).";
 
   try {
@@ -56,10 +56,10 @@ export const getAILearningContent = async (topic: string): Promise<string> => {
 };
 
 // Helper to parse the custom formatted text response from the search tool
-const parseNewsResponse = (text: string | undefined): NewsArticle[] => {
+const parseNewsResponse = (text) => {
   if (!text) return [];
 
-  const articles: NewsArticle[] = [];
+  const articles = [];
   // Split by our defined separator
   const parts = text.split("START_ARTICLE");
 
@@ -85,7 +85,7 @@ const parseNewsResponse = (text: string | undefined): NewsArticle[] => {
   return articles;
 };
 
-export const getAIMarketNewsSummary = async (): Promise<NewsArticle[]> => {
+export const getAIMarketNewsSummary = async () => {
   if (!apiKey) return [];
 
   try {
@@ -118,9 +118,7 @@ export const getAIMarketNewsSummary = async (): Promise<NewsArticle[]> => {
   }
 };
 
-export const getAIStockNews = async (
-  symbol: string
-): Promise<NewsArticle[]> => {
+export const getAIStockNews = async (symbol) => {
   if (!apiKey) return [];
 
   try {
@@ -151,3 +149,5 @@ export const getAIStockNews = async (
     return [];
   }
 };
+
+

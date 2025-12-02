@@ -1,33 +1,31 @@
-import { PortfolioItem } from '../types';
-
-const STORAGE_KEY = 'portfolio';
-const CASH_KEY = 'user_cash_balance';
+const STORAGE_KEY = "portfolio";
+const CASH_KEY = "user_cash_balance";
 const INITIAL_CASH = 10000;
 
-export const getPortfolio = (): PortfolioItem[] => {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+export const getPortfolio = () => {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 };
 
-export const savePortfolio = (portfolio: PortfolioItem[]) => {
+export const savePortfolio = (portfolio) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolio));
 };
 
-export const getCashBalance = (): number => {
+export const getCashBalance = () => {
   const stored = localStorage.getItem(CASH_KEY);
   return stored ? parseFloat(stored) : INITIAL_CASH;
 };
 
-export const updateCashBalance = (amount: number) => {
+export const updateCashBalance = (amount) => {
   localStorage.setItem(CASH_KEY, amount.toString());
 };
 
-export const executeTrade = (symbol: string, quantity: number, price: number, type: 'buy' | 'sell'): PortfolioItem[] => {
+export const executeTrade = (symbol, quantity, price, type) => {
   const portfolio = getPortfolio();
   const cashBalance = getCashBalance();
   const tradeValue = quantity * price;
-  const existingIndex = portfolio.findIndex(p => p.symbol === symbol);
+  const existingIndex = portfolio.findIndex((p) => p.symbol === symbol);
 
-  if (type === 'buy') {
+  if (type === "buy") {
     if (tradeValue > cashBalance) {
       throw new Error("Insufficient funds to complete this purchase.");
     }
@@ -38,19 +36,19 @@ export const executeTrade = (symbol: string, quantity: number, price: number, ty
     if (existingIndex >= 0) {
       // Average down logic
       const item = portfolio[existingIndex];
-      const totalCost = (item.quantity * item.avgBuyPrice) + tradeValue;
+      const totalCost = item.quantity * item.avgBuyPrice + tradeValue;
       const newQty = item.quantity + quantity;
       portfolio[existingIndex] = {
         ...item,
         quantity: newQty,
-        avgBuyPrice: totalCost / newQty
+        avgBuyPrice: totalCost / newQty,
       };
     } else {
       // New position
       portfolio.push({
         symbol,
         quantity,
-        avgBuyPrice: price
+        avgBuyPrice: price,
       });
     }
   } else {
@@ -60,7 +58,7 @@ export const executeTrade = (symbol: string, quantity: number, price: number, ty
     }
 
     const item = portfolio[existingIndex];
-    
+
     if (quantity > item.quantity) {
       throw new Error("Cannot sell more shares than you own.");
     }
@@ -69,7 +67,7 @@ export const executeTrade = (symbol: string, quantity: number, price: number, ty
     updateCashBalance(cashBalance + tradeValue);
 
     const newQty = item.quantity - quantity;
-    
+
     if (newQty <= 0) {
       // Closed position
       portfolio.splice(existingIndex, 1);
@@ -78,12 +76,14 @@ export const executeTrade = (symbol: string, quantity: number, price: number, ty
       portfolio[existingIndex] = { ...item, quantity: newQty };
     }
   }
-  
+
   savePortfolio(portfolio);
   return portfolio;
 };
 
-export const getHolding = (symbol: string): PortfolioItem | undefined => {
-    const portfolio = getPortfolio();
-    return portfolio.find(p => p.symbol === symbol);
-}
+export const getHolding = (symbol) => {
+  const portfolio = getPortfolio();
+  return portfolio.find((p) => p.symbol === symbol);
+};
+
+

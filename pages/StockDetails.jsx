@@ -1,54 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
-  LineChart,
-  Line,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
 } from "recharts";
 import {
   Star,
-  TrendingUp,
   DollarSign,
   Activity,
-  AlertCircle,
   Cpu,
   Newspaper,
   Scale,
   Clock,
 } from "lucide-react";
 import { getStock, MOCK_STOCKS } from "../services/mockData";
-import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
+import {
+  getAIStockAnalysis,
+  getAIStockNews,
+} from "../services/geminiService";
 import {
   executeTrade,
   getHolding,
   getCashBalance,
 } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
-import { Stock, PortfolioItem, NewsArticle } from "../types";
 
-const StockDetails: React.FC = () => {
-  const { ticker } = useParams<{ ticker: string }>();
-  const [stock, setStock] = useState<Stock | undefined>(undefined);
-  const [aiAnalysis, setAiAnalysis] = useState<string>("");
-  const [stockNews, setStockNews] = useState<NewsArticle[]>([]);
+const StockDetails = () => {
+  const { ticker } = useParams();
+  const [stock, setStock] = useState(undefined);
+  const [aiAnalysis, setAiAnalysis] = useState("");
+  const [stockNews, setStockNews] = useState([]);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [loadingNews, setLoadingNews] = useState(false);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
   const [cashBalance, setCashBalance] = useState(0);
+  const [chartData, setChartData] = useState([]);
 
   // Mock Chart Data
-  const generateChartData = () => {
-    if (!stock) return [];
+  const generateChartData = (currentStock) => {
+    if (!currentStock) return [];
 
     const points = [];
-    let currentPrice = stock.price;
+    let currentPrice = currentStock.price;
     const today = new Date();
 
     // Generate 30 days of data backwards from today to ensure the chart ends at current price
@@ -74,8 +73,6 @@ const StockDetails: React.FC = () => {
     return points.reverse();
   };
 
-  const [chartData, setChartData] = useState<any[]>([]);
-
   useEffect(() => {
     if (ticker) {
       const foundStock = getStock(ticker.toUpperCase());
@@ -94,12 +91,13 @@ const StockDetails: React.FC = () => {
 
   useEffect(() => {
     if (stock) {
-      setChartData(generateChartData());
+      setChartData(generateChartData(stock));
       fetchStockNews(stock.symbol);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stock]);
 
-  const fetchStockNews = async (symbol: string) => {
+  const fetchStockNews = async (symbol) => {
     setLoadingNews(true);
     try {
       const result = await getAIStockNews(symbol);
@@ -136,7 +134,7 @@ const StockDetails: React.FC = () => {
     const current = JSON.parse(localStorage.getItem("watchlist") || "[]");
     let updated;
     if (inWatchlist) {
-      updated = current.filter((t: string) => t !== ticker.toUpperCase());
+      updated = current.filter((t) => t !== ticker.toUpperCase());
     } else {
       updated = [...current, ticker.toUpperCase()];
     }
@@ -144,18 +142,18 @@ const StockDetails: React.FC = () => {
     setInWatchlist(!inWatchlist);
   };
 
-  const handleTrade = (type: "buy" | "sell", quantity: number) => {
+  const handleTrade = (type, quantity) => {
     if (!stock) return;
     try {
       executeTrade(stock.symbol, quantity, stock.price, type);
       setIsTradeModalOpen(false);
       setCashBalance(getCashBalance()); // Refresh cash
       alert(
-        `Successfully ${
-          type === "buy" ? "bought" : "sold"
-        } ${quantity} shares of ${stock.symbol}`
+        `Successfully ${type === "buy" ? "bought" : "sold"} ${quantity} shares of ${
+          stock.symbol
+        }`
       );
-    } catch (e: any) {
+    } catch (e) {
       alert(e.message);
     }
   };
@@ -244,7 +242,13 @@ const StockDetails: React.FC = () => {
                   margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
                 >
                   <defs>
-                    <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient
+                      id="colorPrice"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
                       <stop
                         offset="5%"
                         stopColor={isPositive ? "#10b981" : "#f43f5e"}
@@ -282,10 +286,7 @@ const StockDetails: React.FC = () => {
                       border: "none",
                       boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                     }}
-                    formatter={(value: number) => [
-                      `$${value.toFixed(2)}`,
-                      "Price",
-                    ]}
+                    formatter={(value) => [`$${value.toFixed(2)}`, "Price"]}
                   />
                   <Area
                     type="monotone"
@@ -441,7 +442,7 @@ const StockDetails: React.FC = () => {
 
             {loadingAnalysis && (
               <div className="flex flex-col items-center justify-center py-6 text-indigo-500">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2" />
                 <span className="text-sm">Analyzing market data...</span>
               </div>
             )}
@@ -464,8 +465,8 @@ const StockDetails: React.FC = () => {
             <div className="space-y-4">
               {loadingNews ? (
                 <div className="animate-pulse space-y-4">
-                  <div className="h-16 bg-slate-100 rounded-lg"></div>
-                  <div className="h-16 bg-slate-100 rounded-lg"></div>
+                  <div className="h-16 bg-slate-100 rounded-lg" />
+                  <div className="h-16 bg-slate-100 rounded-lg" />
                 </div>
               ) : stockNews.length > 0 ? (
                 stockNews.map((news, i) => (
@@ -516,3 +517,5 @@ const StockDetails: React.FC = () => {
 };
 
 export default StockDetails;
+
+

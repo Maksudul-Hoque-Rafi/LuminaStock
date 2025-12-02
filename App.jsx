@@ -11,7 +11,7 @@ import Watchlist from "./pages/Watchlist";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <Router>
       <Layout>
@@ -32,3 +32,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
