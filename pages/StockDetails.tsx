@@ -419,7 +419,7 @@ const StockDetails: React.FC = () => {
           </div>
 
           {/* AI Analysis */}
-          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-xl border border-indigo-100">
+          <div className="bg-linear-to-br from-indigo-50 to-blue-50 p-6 rounded-xl border border-indigo-100">
             <h3 className="text-lg font-bold text-indigo-900 mb-2 flex items-center gap-2">
               <Cpu size={20} className="text-indigo-600" />
               Gemini AI Insight
