@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
-import { Stock, NewsArticle } from '../types';
+import { Stock, NewsArticle } from "../types";
 
-const apiKey = process.env.API_KEY || ''; 
+const apiKey = process.env.API_KEY || "AIzaSyCKD6qAm_sRMg-Ray9jv1Vr7co15NljYZY";
 const ai = new GoogleGenAI({ apiKey });
 
 export const getAIStockAnalysis = async (stock: Stock): Promise<string> => {
@@ -22,10 +22,10 @@ export const getAIStockAnalysis = async (stock: Stock): Promise<string> => {
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       contents: prompt,
     });
-    
+
     return response.text || "Analysis currently unavailable.";
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -44,7 +44,7 @@ export const getAILearningContent = async (topic: string): Promise<string> => {
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       contents: prompt,
     });
 
@@ -58,37 +58,37 @@ export const getAILearningContent = async (topic: string): Promise<string> => {
 // Helper to parse the custom formatted text response from the search tool
 const parseNewsResponse = (text: string | undefined): NewsArticle[] => {
   if (!text) return [];
-  
+
   const articles: NewsArticle[] = [];
   // Split by our defined separator
-  const parts = text.split('START_ARTICLE');
-  
+  const parts = text.split("START_ARTICLE");
+
   for (const part of parts) {
-    if (!part.includes('END_ARTICLE')) continue;
-    
+    if (!part.includes("END_ARTICLE")) continue;
+
     const titleMatch = part.match(/TITLE:\s*(.+)/);
     const sourceMatch = part.match(/SOURCE:\s*(.+)/);
     const timeMatch = part.match(/TIME:\s*(.+)/);
     const summaryMatch = part.match(/SUMMARY:\s*(.+)/);
     const urlMatch = part.match(/URL:\s*(.+)/);
-    
+
     if (titleMatch) {
-        articles.push({
-            title: titleMatch[1].trim(),
-            source: sourceMatch ? sourceMatch[1].trim() : 'News',
-            time: timeMatch ? timeMatch[1].trim() : 'Today',
-            summary: summaryMatch ? summaryMatch[1].trim() : '',
-            url: urlMatch ? urlMatch[1].trim() : undefined
-        });
+      articles.push({
+        title: titleMatch[1].trim(),
+        source: sourceMatch ? sourceMatch[1].trim() : "News",
+        time: timeMatch ? timeMatch[1].trim() : "Today",
+        summary: summaryMatch ? summaryMatch[1].trim() : "",
+        url: urlMatch ? urlMatch[1].trim() : undefined,
+      });
     }
   }
   return articles;
 };
 
 export const getAIMarketNewsSummary = async (): Promise<NewsArticle[]> => {
-   if (!apiKey) return [];
-   
-   try {
+  if (!apiKey) return [];
+
+  try {
     const prompt = `
       Find 4 latest trending financial news headlines today (US Markets).
       Format the output strictly as follows for each article (do not use markdown formatting like ** or []):
@@ -103,26 +103,28 @@ export const getAIMarketNewsSummary = async (): Promise<NewsArticle[]> => {
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       contents: prompt,
-      config: { 
-        tools: [{ googleSearch: {} }] 
+      config: {
+        tools: [{ googleSearch: {} }],
         // Note: responseMimeType is NOT allowed with googleSearch
-      }
+      },
     });
 
     return parseNewsResponse(response.text);
-   } catch (error) {
-     console.error("Gemini Error:", error);
-     return [];
-   }
-}
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    return [];
+  }
+};
 
-export const getAIStockNews = async (symbol: string): Promise<NewsArticle[]> => {
+export const getAIStockNews = async (
+  symbol: string
+): Promise<NewsArticle[]> => {
   if (!apiKey) return [];
 
   try {
-   const prompt = `
+    const prompt = `
      Find 3 latest news stories specifically for ${symbol}.
      Format the output strictly as follows for each article (do not use markdown formatting):
      
@@ -135,17 +137,17 @@ export const getAIStockNews = async (symbol: string): Promise<NewsArticle[]> => 
      END_ARTICLE
    `;
 
-   const response = await ai.models.generateContent({
-     model: 'gemini-2.5-flash',
-     contents: prompt,
-     config: { 
-        tools: [{ googleSearch: {} }] 
-     }
-   });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        tools: [{ googleSearch: {} }],
+      },
+    });
 
-   return parseNewsResponse(response.text);
+    return parseNewsResponse(response.text);
   } catch (error) {
     console.error("Gemini Error:", error);
     return [];
   }
-}
+};
