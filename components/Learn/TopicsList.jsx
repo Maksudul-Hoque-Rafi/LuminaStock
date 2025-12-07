@@ -21,7 +21,7 @@ const TopicCard = ({ title, desc, onClick }) => (
 
 const TopicsList = ({ topics, onSelectTopic }) => {
   return (
-    <div className="overflow-y-auto pr-2 space-y-6">
+    <>
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
           Investment Academy
@@ -41,7 +41,7 @@ const TopicsList = ({ topics, onSelectTopic }) => {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

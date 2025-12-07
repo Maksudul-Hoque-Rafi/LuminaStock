@@ -48,7 +48,7 @@ const Learn = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-8rem)]">
       {/* Left: Topics List */}
-      <div>
+      <div className="overflow-y-auto pr-2 space-y-6">
         <TopicsList topics={topics} onSelectTopic={handleTopicClick} />
         <ProTip />
       </div>
