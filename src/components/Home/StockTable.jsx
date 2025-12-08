@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { TrendingUp, TrendingDown, ChevronRight } from "lucide-react";
 
 const StockTable = ({ title, icon: Icon, stocks, isGainer }) => {

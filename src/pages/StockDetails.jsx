@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { getStock, MOCK_STOCKS } from "../services/mockData";
 import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
 import {

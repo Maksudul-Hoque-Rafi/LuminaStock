@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -135,5 +135,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

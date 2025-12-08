@@ -1,12 +1,12 @@
-import React from "react";
 import Navbar from "./Navbar";
+import { Outlet } from "react-router";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+        <Outlet />
       </main>
       <footer className="bg-white border-t border-slate-200 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -21,5 +21,3 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
-
-

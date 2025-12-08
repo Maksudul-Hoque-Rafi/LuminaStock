@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Star, Trash2 } from "lucide-react";
 import { MOCK_STOCKS } from "../services/mockData";
 
@@ -15,7 +15,9 @@ const Watchlist = () => {
   }, []);
 
   const removeFromWatchlist = (symbol) => {
-    const currentTickers = JSON.parse(localStorage.getItem("watchlist") || "[]");
+    const currentTickers = JSON.parse(
+      localStorage.getItem("watchlist") || "[]"
+    );
     const newTickers = currentTickers.filter((t) => t !== symbol);
     localStorage.setItem("watchlist", JSON.stringify(newTickers));
     setWatchlistStocks(watchlistStocks.filter((s) => s.symbol !== symbol));
@@ -102,5 +104,3 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
-
-

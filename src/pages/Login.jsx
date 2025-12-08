@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Mail, Lock, LogIn, ArrowLeft } from "lucide-react";
 
 const Login = () => {
@@ -152,5 +153,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
