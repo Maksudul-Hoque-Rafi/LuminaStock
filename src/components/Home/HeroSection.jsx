@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 const HeroSection = () => {
   return (
-    <div className="relative bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 sm:p-12 text-white overflow-hidden shadow-lg">
+    <div className="relative bg-linear-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 sm:p-12 text-white overflow-hidden shadow-lg">
       <div className="relative z-10 max-w-2xl">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4">
           Master the Markets with AI Precision
