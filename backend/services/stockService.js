@@ -65,3 +65,15 @@ export const getStockList = async () => {
     console.error("getStocks error:", error.message);
   }
 };
+
+export const priceHistory = async (ticker) => {
+  try {
+    const historyData = await axios.get(
+      `https://stocks.adgstudios.co.za/json/${ticker}`
+    );
+    return historyData.data.slice(-30);
+  } catch (error) {
+    console.error("getStock error: ", error.message);
+    throw new Error("Failed to fetch stock from Finnhub");
+  }
+};
