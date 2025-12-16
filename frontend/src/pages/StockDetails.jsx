@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLoaderData, useParams } from "react-router";
 import { getStock, MOCK_STOCKS } from "../services/mockData";
 import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
 import {
@@ -17,6 +17,7 @@ import AIAnalysis from "../components/StockDetails/AIAnalysis";
 import NewsSection from "../components/StockDetails/NewsSection";
 
 const StockDetails = () => {
+  const chartData = useLoaderData();
   const { ticker } = useParams();
   const [stock, setStock] = useState(undefined);
   const [aiAnalysis, setAiAnalysis] = useState("");
@@ -26,38 +27,6 @@ const StockDetails = () => {
   const [inWatchlist, setInWatchlist] = useState(false);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
   const [cashBalance, setCashBalance] = useState(0);
-  const [chartData, setChartData] = useState([]);
-
-  // Mock Chart Data
-  const generateChartData = (currentStock) => {
-    if (!currentStock) return [];
-
-    const points = [];
-    let currentPrice = currentStock.price;
-    const today = new Date();
-
-    // Generate 30 days of data backwards from today to ensure the chart ends at current price
-    for (let i = 0; i < 30; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-
-      points.push({
-        date: date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
-        price: currentPrice,
-      });
-
-      // Calculate previous day's price (reverse random walk)
-      // volatility factor approx 2-3%
-      const volatility = 0.03;
-      const change = 1 + (Math.random() - 0.5) * volatility;
-      currentPrice = currentPrice / change;
-    }
-
-    return points.reverse();
-  };
 
   useEffect(() => {
     if (ticker) {
@@ -77,7 +46,6 @@ const StockDetails = () => {
 
   useEffect(() => {
     if (stock) {
-      setChartData(generateChartData(stock));
       fetchStockNews(stock.symbol);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
