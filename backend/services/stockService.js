@@ -1,6 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import { getMockStock, tickerList } from "./stockInfo.js";
+import { chartData, syntheticChartData } from "../lib/chartInfo.js";
 dotenv.config();
 
 const API_KEY = process.env.FINNHUB_API_KEY;
@@ -68,12 +69,19 @@ export const getStockList = async () => {
 
 export const priceHistory = async (ticker) => {
   try {
-    const historyData = await axios.get(
+    const response = await axios.get(
       `https://stocks.adgstudios.co.za/json/${ticker}`
     );
-    return historyData.data.slice(-30);
+    const points = chartData(response.data.slice(-30));
+    return points;
   } catch (error) {
     console.error("getStock error: ", error.message);
-    throw new Error("Failed to fetch stock from Finnhub");
+
+    const stock = await getStockData(ticker);
+    const points = syntheticChartData(stock.price);
+    return points;
+
+    // console.error("getStock error: ", error.message);
+    // throw new Error("Failed to fetch stock from Finnhub");
   }
 };

@@ -11,8 +11,8 @@ export const fetchStock = async (req, res) => {
 
 export const fetchPriceHistory = async (req, res) => {
   try {
-    const stocksData = await priceHistory(req.params.symbol);
-    res.status(200).json(stocksData);
+    const stocksHistory = await priceHistory(req.params.symbol);
+    res.status(200).json(stocksHistory);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch stock history data" });
   }
