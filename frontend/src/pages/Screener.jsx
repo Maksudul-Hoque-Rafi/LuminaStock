@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { MOCK_STOCKS } from "../services/mockData";
 import ScreenerHeader from "../components/Screener/ScreenerHeader";
 import FilterBar from "../components/Screener/FilterBar";
 import StocksTable from "../components/Screener/StocksTable";
+import { StockContext } from "../contexts/StockContext";
 
 const Screener = () => {
+  const { stockInfo } = useContext(StockContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [sectorFilter, setSectorFilter] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
+
+  console.log("From Screener Page, StockInfo is ", stockInfo);
 
   const sectors = [
     "All",

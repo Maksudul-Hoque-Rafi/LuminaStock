@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import HeroSection from "../components/Home/HeroSection";
 import MarketOverview from "../components/Home/MarketOverview";
 import StockTable from "../components/Home/StockTable";
 import QuickLinks from "../components/Home/QuickLinks";
 import { useLoaderData } from "react-router";
+import { StockContext } from "../contexts/StockContext";
 
 const Home = () => {
   const stocksInfo = useLoaderData();
+  const { setStockInfo } = useContext(StockContext);
+
+  // Update stockInfo in context when Home is rendered first time
+  useEffect(() => {
+    setStockInfo(stocksInfo);
+  }, [stocksInfo, setStockInfo]);
+
   const topGainers = [...stocksInfo]
     .sort((a, b) => b.changePercent - a.changePercent)
     .slice(0, 3);

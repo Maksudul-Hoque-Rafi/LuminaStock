@@ -15,7 +15,6 @@ const StocksTable = ({ filteredStocks, onClearFilters }) => {
               <th className="px-6 py-4 text-right">Price</th>
               <th className="px-6 py-4 text-right">Change %</th>
               <th className="px-6 py-4 text-right">Market Cap</th>
-              <th className="px-6 py-4 text-right">P/E</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -55,15 +54,12 @@ const StocksTable = ({ filteredStocks, onClearFilters }) => {
                   <td className="px-6 py-4 text-right text-slate-600">
                     {stock.marketCap}
                   </td>
-                  <td className="px-6 py-4 text-right text-slate-600">
-                    {stock.peRatio}
-                  </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={6}
                   className="px-6 py-12 text-center text-slate-500"
                 >
                   <div className="flex flex-col items-center justify-center">
