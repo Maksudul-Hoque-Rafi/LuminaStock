@@ -9,7 +9,7 @@ import News from "./pages/News";
 import Watchlist from "./pages/Watchlist";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { stockDetailsLoader } from "./lib/loaders";
+import { priceHistoryLoader, stockInfoLoader } from "./lib/loaders";
 
 export const router = createBrowserRouter([
   {
@@ -17,10 +17,10 @@ export const router = createBrowserRouter([
     Component: Layout,
     errorElement: <div>Not Found 404</div>,
     children: [
-      { index: true, Component: Home },
+      { index: true, loader: stockInfoLoader, Component: Home },
       {
         path: "stock/:ticker",
-        loader: stockDetailsLoader,
+        loader: priceHistoryLoader,
         Component: StockDetails,
       },
       { path: "portfolio", Component: Portfolio },

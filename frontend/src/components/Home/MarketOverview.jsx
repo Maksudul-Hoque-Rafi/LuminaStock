@@ -25,6 +25,11 @@ const MarketOverview = () => {
     <div>
       <h2 className="text-xl font-bold text-slate-900 mb-4">Market Overview</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/*
+        Market cards are currently static.
+        A reliable free API for real-time index and commodity data
+        (S&P 500, NASDAQ, Dow Jones, Gold) is not available.
+        */}
         <MarketCard
           title="S&P 500"
           value="4,450.32"

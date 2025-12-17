@@ -1,16 +1,17 @@
 import React from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { MOCK_STOCKS } from "../services/mockData";
 import HeroSection from "../components/Home/HeroSection";
 import MarketOverview from "../components/Home/MarketOverview";
 import StockTable from "../components/Home/StockTable";
 import QuickLinks from "../components/Home/QuickLinks";
+import { useLoaderData } from "react-router";
 
 const Home = () => {
-  const topGainers = [...MOCK_STOCKS]
+  const stocksInfo = useLoaderData();
+  const topGainers = [...stocksInfo]
     .sort((a, b) => b.changePercent - a.changePercent)
     .slice(0, 3);
-  const topLosers = [...MOCK_STOCKS]
+  const topLosers = [...stocksInfo]
     .sort((a, b) => a.changePercent - b.changePercent)
     .slice(0, 3);
 
