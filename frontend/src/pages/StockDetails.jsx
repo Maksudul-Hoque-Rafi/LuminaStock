@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
-import { getStock, MOCK_STOCKS } from "../services/mockData";
 import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
 import {
   executeTrade,
@@ -10,14 +9,16 @@ import {
 import { TradeModal } from "../components/TradeModal";
 import StockHeader from "../components/StockDetails/StockHeader";
 import PriceChart from "../components/StockDetails/PriceChart";
-import AboutSection from "../components/StockDetails/AboutSection";
 import PeerComparison from "../components/StockDetails/PeerComparison";
 import StockStats from "../components/StockDetails/StockStats";
 import AIAnalysis from "../components/StockDetails/AIAnalysis";
 import NewsSection from "../components/StockDetails/NewsSection";
+import { getStock } from "../lib/stockInfo";
+import { StockContext } from "../contexts/StockContext";
 
 const StockDetails = () => {
   const chartData = useLoaderData();
+  const { stocks } = useContext(StockContext);
   const { ticker } = useParams();
   const [stock, setStock] = useState(undefined);
   const [aiAnalysis, setAiAnalysis] = useState("");
@@ -30,7 +31,7 @@ const StockDetails = () => {
 
   useEffect(() => {
     if (ticker) {
-      const foundStock = getStock(ticker.toUpperCase());
+      const foundStock = getStock(stocks, ticker.toUpperCase());
       setStock(foundStock);
 
       // Check watchlist
@@ -121,9 +122,9 @@ const StockDetails = () => {
   }
 
   const isPositive = stock.change >= 0;
-  const peerStocks = MOCK_STOCKS.filter(
-    (s) => s.sector === stock.sector && s.symbol !== stock.symbol
-  ).slice(0, 3);
+  const peerStocks = stocks
+    .filter((s) => s.sector === stock.sector && s.symbol !== stock.symbol)
+    .slice(0, 3);
   const currentHolding = getHolding(stock.symbol);
 
   return (
@@ -146,7 +147,6 @@ const StockDetails = () => {
             isPositive={isPositive}
             stock={stock}
           />
-          <AboutSection stock={stock} />
           <PeerComparison peerStocks={peerStocks} />
         </div>
 

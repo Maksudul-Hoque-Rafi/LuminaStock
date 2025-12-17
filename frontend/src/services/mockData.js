@@ -150,9 +150,3 @@ export const MOCK_STOCKS = [
       "Exxon Mobil Corporation explores for and produces crude oil and natural gas in the United States and internationally.",
   },
 ];
-
-export const getStock = (ticker) => {
-  return MOCK_STOCKS.find((s) => s.symbol === ticker);
-};
-
-

@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Filter } from "lucide-react";
 
 const StocksTable = ({ filteredStocks, onClearFilters }) => {
+  console.log("Filtered stocks are ", filteredStocks);
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
       <div className="overflow-x-auto">
@@ -14,7 +15,7 @@ const StocksTable = ({ filteredStocks, onClearFilters }) => {
               <th className="px-6 py-4">Sector</th>
               <th className="px-6 py-4 text-right">Price</th>
               <th className="px-6 py-4 text-right">Change</th>
-              <th className="px-6 py-4 text-right">Change %</th>
+              <th className="px-6 py-4 text-right">Market Cap</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -48,15 +49,8 @@ const StocksTable = ({ filteredStocks, onClearFilters }) => {
                   >
                     {stock.change > 0 ? "+" : "-"}${Math.abs(stock.change)}
                   </td>
-                  <td
-                    className={`px-6 py-4 text-right font-medium ${
-                      stock.changePercent >= 0
-                        ? "text-emerald-600"
-                        : "text-rose-600"
-                    }`}
-                  >
-                    {stock.changePercent > 0 ? "+" : ""}
-                    {stock.changePercent}%
+                  <td className="px-6 py-4 text-right text-slate-600">
+                    {stock.marketCap}
                   </td>
                 </tr>
               ))

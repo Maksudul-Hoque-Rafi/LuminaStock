@@ -18,7 +18,6 @@ const PeerComparison = ({ peerStocks }) => {
               <th className="pb-2">Company</th>
               <th className="pb-2 text-right">Price</th>
               <th className="pb-2 text-right">Market Cap</th>
-              <th className="pb-2 text-right">P/E</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -35,9 +34,6 @@ const PeerComparison = ({ peerStocks }) => {
                 <td className="py-3 text-right">${peer.price.toFixed(2)}</td>
                 <td className="py-3 text-right text-slate-600">
                   {peer.marketCap}
-                </td>
-                <td className="py-3 text-right text-slate-600">
-                  {peer.peRatio}
                 </td>
               </tr>
             ))}

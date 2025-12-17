@@ -23,37 +23,6 @@ const StockStats = ({ stock, currentHolding }) => {
           </div>
         </div>
       )}
-
-      {/* Key Stats */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-900 mb-4">
-          Key Statistics
-        </h3>
-        <div className="space-y-4 text-sm">
-          <div className="flex justify-between border-b border-slate-50 pb-2">
-            <span className="text-slate-500">Market Cap</span>
-            <span className="font-medium text-slate-900">
-              {stock.marketCap}
-            </span>
-          </div>
-          <div className="flex justify-between border-b border-slate-50 pb-2">
-            <span className="text-slate-500">P/E Ratio</span>
-            <span className="font-medium text-slate-900">{stock.peRatio}</span>
-          </div>
-          <div className="flex justify-between border-b border-slate-50 pb-2">
-            <span className="text-slate-500">Volume</span>
-            <span className="font-medium text-slate-900">{stock.volume}</span>
-          </div>
-          <div className="flex justify-between border-b border-slate-50 pb-2">
-            <span className="text-slate-500">52W High</span>
-            <span className="font-medium text-slate-900">${stock.high52}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-500">52W Low</span>
-            <span className="font-medium text-slate-900">${stock.low52}</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
