@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { MOCK_STOCKS } from "../services/mockData";
+import React, { useContext, useEffect, useState } from "react";
 import {
   getPortfolio,
   savePortfolio,
@@ -11,8 +10,10 @@ import SummaryCards from "../components/Portfolio/SummaryCards";
 import GrowthChart from "../components/Portfolio/GrowthChart";
 import AllocationChart from "../components/Portfolio/AllocationChart";
 import HoldingsTable from "../components/Portfolio/HoldingsTable";
+import { StockContext } from "../contexts/StockContext";
 
 const Portfolio = () => {
+  const { stocks } = useContext(StockContext);
   const [holdings, setHoldings] = useState([]);
   const [currentPrices, setCurrentPrices] = useState({});
   const [cashBalance, setCashBalance] = useState(0);
@@ -36,7 +37,7 @@ const Portfolio = () => {
     // Hydrate with current prices from mock data
     const prices = {};
     saved.forEach((item) => {
-      const stock = MOCK_STOCKS.find((s) => s.symbol === item.symbol);
+      const stock = stocks.find((s) => s.symbol === item.symbol);
       if (stock) {
         prices[item.symbol] = stock.price;
       }
