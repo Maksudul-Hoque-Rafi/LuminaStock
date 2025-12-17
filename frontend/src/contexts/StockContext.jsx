@@ -5,16 +5,11 @@ export const StockContext = createContext();
 
 // Provider component
 export const StockProvider = ({ children }) => {
-  const [stockInfo, setStockInfo] = useState([]);
-
-  // Function to update stock info
-  const updateStockInfo = (newStockInfo) => {
-    setStockInfo(newStockInfo);
-  };
+  const [stocks, setStocks] = useState([]);
 
   const value = {
-    stockInfo,
-    setStockInfo: updateStockInfo,
+    stocks,
+    setStocks,
   };
 
   return (

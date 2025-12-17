@@ -5,19 +5,14 @@ import StocksTable from "../components/Screener/StocksTable";
 import { StockContext } from "../contexts/StockContext";
 
 const Screener = () => {
-  const { stockInfo } = useContext(StockContext);
+  const { stocks } = useContext(StockContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [sectorFilter, setSectorFilter] = useState("All");
   const [priceFilter, setPriceFilter] = useState("All");
 
-  console.log("From Screener Page, StockInfo is ", stockInfo);
+  const sectors = ["All", ...Array.from(new Set(stocks.map((s) => s.sector)))];
 
-  const sectors = [
-    "All",
-    ...Array.from(new Set(stockInfo.map((s) => s.sector))),
-  ];
-
-  const filteredStocks = stockInfo.filter((stock) => {
+  const filteredStocks = stocks.filter((stock) => {
     const matchesSearch =
       stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
       stock.name.toLowerCase().includes(searchTerm.toLowerCase());

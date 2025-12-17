@@ -8,18 +8,17 @@ import { useLoaderData } from "react-router";
 import { StockContext } from "../contexts/StockContext";
 
 const Home = () => {
-  const stocksInfo = useLoaderData();
-  const { setStockInfo } = useContext(StockContext);
+  const stocksList = useLoaderData();
+  const { setStocks } = useContext(StockContext);
 
-  // Update stockInfo in context when Home is rendered first time
   useEffect(() => {
-    setStockInfo(stocksInfo);
-  }, [stocksInfo, setStockInfo]);
+    setStocks(stocksList);
+  }, [stocksList]);
 
-  const topGainers = [...stocksInfo]
+  const topGainers = [...stocksList]
     .sort((a, b) => b.changePercent - a.changePercent)
     .slice(0, 3);
-  const topLosers = [...stocksInfo]
+  const topLosers = [...stocksList]
     .sort((a, b) => a.changePercent - b.changePercent)
     .slice(0, 3);
 
