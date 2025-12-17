@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Star, Trash2 } from "lucide-react";
-import { MOCK_STOCKS } from "../services/mockData";
+import { StockContext } from "../contexts/StockContext";
 
 const Watchlist = () => {
+  const { stocks: stocksList } = useContext(StockContext);
   const [watchlistStocks, setWatchlistStocks] = useState([]);
 
   useEffect(() => {
     const tickers = JSON.parse(localStorage.getItem("watchlist") || "[]");
     const stocks = tickers
-      .map((t) => MOCK_STOCKS.find((s) => s.symbol === t))
+      .map((t) => stocksList.find((s) => s.symbol === t))
       .filter((s) => !!s);
     setWatchlistStocks(stocks);
   }, []);
