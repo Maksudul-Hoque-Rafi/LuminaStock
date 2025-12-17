@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { MOCK_STOCKS } from "../services/mockData";
 import ScreenerHeader from "../components/Screener/ScreenerHeader";
 import FilterBar from "../components/Screener/FilterBar";
 import StocksTable from "../components/Screener/StocksTable";
@@ -15,10 +14,10 @@ const Screener = () => {
 
   const sectors = [
     "All",
-    ...Array.from(new Set(MOCK_STOCKS.map((s) => s.sector))),
+    ...Array.from(new Set(stockInfo.map((s) => s.sector))),
   ];
 
-  const filteredStocks = MOCK_STOCKS.filter((stock) => {
+  const filteredStocks = stockInfo.filter((stock) => {
     const matchesSearch =
       stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
       stock.name.toLowerCase().includes(searchTerm.toLowerCase());
