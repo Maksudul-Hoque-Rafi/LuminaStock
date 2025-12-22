@@ -2,30 +2,35 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { Mail, Lock, User, ArrowLeft, ArrowRight } from "lucide-react";
+import apiRequest from "../lib/apiRequest";
 
 const Register = () => {
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    setError("");
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
-      return;
-    }
+
     // Placeholder for authentication logic
     console.log("Register attempt:", formData);
-    // Simulate success
-    navigate("/");
+
+    try {
+      await apiRequest.post("/auth/register", formData);
+      navigate("/login");
+    } catch (err) {
+      setError(err.response.data.message);
+    }
   };
 
   return (
@@ -55,21 +60,21 @@ const Register = () => {
           <div className="space-y-4">
             <div>
               <label
-                htmlFor="name"
+                htmlFor="username"
                 className="block text-sm font-medium text-slate-700 mb-1"
               >
-                Full Name
+                Username
               </label>
               <div className="relative">
                 <input
-                  id="name"
-                  name="name"
+                  id="username"
+                  name="username"
                   type="text"
                   required
-                  value={formData.name}
+                  value={formData.username}
                   onChange={handleChange}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="John Doe"
+                  placeholder="john1234"
                 />
                 <User
                   className="absolute left-3 top-2.5 text-slate-400"
@@ -128,32 +133,9 @@ const Register = () => {
                 />
               </div>
             </div>
-
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-slate-700 mb-1"
-              >
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Confirm password"
-                />
-                <Lock
-                  className="absolute left-3 top-2.5 text-slate-400"
-                  size={18}
-                />
-              </div>
-            </div>
           </div>
+
+          {error && <p>{error}</p>}
 
           <div className="text-xs text-slate-500">
             By clicking "Create Account", you agree to our{" "}
@@ -170,7 +152,7 @@ const Register = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="cursor-pointer group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <ArrowRight
