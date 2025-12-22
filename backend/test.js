@@ -2,23 +2,23 @@ import { prisma } from "./lib/prisma.js";
 
 async function main() {
   // Create a new user with a post
-  const user = await prisma.user.create({
-    data: {
-      name: "Alice",
-      email: "alice@prisma.io",
-      posts: {
-        create: {
-          title: "Hello World",
-          content: "This is my first post!",
-          published: true,
-        },
-      },
-    },
-    include: {
-      posts: true,
-    },
-  });
-  console.log("Created user:", user);
+  //   const user = await prisma.user.create({
+  //     data: {
+  //       name: "Alice",
+  //       email: "alice@prisma.io",
+  //       posts: {
+  //         create: {
+  //           title: "Hello World",
+  //           content: "This is my first post!",
+  //           published: true,
+  //         },
+  //       },
+  //     },
+  //     include: {
+  //       posts: true,
+  //     },
+  //   });
+  //   console.log("Created user:", user);
 
   // Fetch all users with their posts
   const allUsers = await prisma.user.findMany({
