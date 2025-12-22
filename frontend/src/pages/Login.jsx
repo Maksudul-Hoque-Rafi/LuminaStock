@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { Mail, Lock, LogIn, ArrowLeft } from "lucide-react";
 import apiRequest from "../lib/apiRequest";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
+  const { updateUser } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +19,7 @@ const Login = () => {
         username,
         password,
       });
-      console.log("Response from Backend ", response.data);
+      updateUser(response.data);
       navigate("/");
     } catch (err) {
       console.log(err);
