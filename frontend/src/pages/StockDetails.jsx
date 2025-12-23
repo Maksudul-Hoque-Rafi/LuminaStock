@@ -1,11 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useLoaderData, useParams } from "react-router";
-import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
-import {
-  executeTrade,
-  getHolding,
-  getCashBalance,
-} from "../services/portfolioService";
+import React, { useEffect, useState } from "react";
+import { useLoaderData } from "react-router";
+import { getHolding, getCashBalance } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
 import StockHeader from "../components/StockDetails/StockHeader";
 import PriceChart from "../components/StockDetails/PriceChart";
@@ -13,105 +8,46 @@ import PeerComparison from "../components/StockDetails/PeerComparison";
 import StockStats from "../components/StockDetails/StockStats";
 import AIAnalysis from "../components/StockDetails/AIAnalysis";
 import NewsSection from "../components/StockDetails/NewsSection";
-import { getStock } from "../lib/stockInfo";
-import { StockContext } from "../contexts/StockContext";
+import { useStockDetails } from "../hooks/useStockDetails";
+import { useStockAI } from "../hooks/useStockAI";
+import { useStockAction } from "../hooks/useStockAction";
 
 const StockDetails = () => {
   const chartData = useLoaderData();
-  const { stocks } = useContext(StockContext);
-  const { ticker } = useParams();
-  const [stock, setStock] = useState(undefined);
-  const [aiAnalysis, setAiAnalysis] = useState("");
-  const [stockNews, setStockNews] = useState([]);
-  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
-  const [loadingNews, setLoadingNews] = useState(false);
-  const [inWatchlist, setInWatchlist] = useState(false);
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
-  const [cashBalance, setCashBalance] = useState(0);
+  const {
+    stocksList,
+    stock,
+    ticker,
+    inWatchlist,
+    setInWatchlist,
+    cashBalance,
+    setCashBalance,
+  } = useStockDetails();
 
-  useEffect(() => {
-    if (ticker) {
-      const foundStock = getStock(stocks, ticker.toUpperCase());
-      setStock(foundStock);
+  const {
+    aiAnalysis,
+    loadingAnalysis,
+    stockNews,
+    loadingNews,
+    fetchStockNews,
+    handleAIAnalysis,
+  } = useStockAI();
 
-      // Check watchlist
-      const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
-      setInWatchlist(watchlist.includes(ticker.toUpperCase()));
-
-      // Reset states
-      setAiAnalysis("");
-      setStockNews([]);
-      setCashBalance(getCashBalance());
-    }
-  }, [ticker]);
+  const { toggleWatchlist, handleTrade } = useStockAction(
+    ticker,
+    stock,
+    inWatchlist,
+    setInWatchlist,
+    setIsTradeModalOpen,
+    setCashBalance
+  );
 
   useEffect(() => {
     if (stock) {
       fetchStockNews(stock.symbol);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stock]);
-
-  const fetchStockNews = async (symbol) => {
-    setLoadingNews(true);
-    try {
-      const result = await getAIStockNews(symbol);
-      if (result && result.length > 0) {
-        setStockNews(result);
-      } else {
-        // Fallback manual news if search returns empty for demo purposes
-        setStockNews([
-          {
-            title: `${symbol} Market Movement`,
-            summary: "Latest trading data shows active volume.",
-            source: "MarketWatch",
-            time: "Today",
-            url: `https://www.google.com/search?q=${symbol}+stock+news`,
-          },
-        ]);
-      }
-    } catch {
-      setStockNews([]);
-    }
-    setLoadingNews(false);
-  };
-
-  const handleAIAnalysis = async () => {
-    if (!stock) return;
-    setLoadingAnalysis(true);
-    const analysis = await getAIStockAnalysis(stock);
-    setAiAnalysis(analysis);
-    setLoadingAnalysis(false);
-  };
-
-  const toggleWatchlist = () => {
-    if (!ticker) return;
-    const current = JSON.parse(localStorage.getItem("watchlist") || "[]");
-    let updated;
-    if (inWatchlist) {
-      updated = current.filter((t) => t !== ticker.toUpperCase());
-    } else {
-      updated = [...current, ticker.toUpperCase()];
-    }
-    localStorage.setItem("watchlist", JSON.stringify(updated));
-    setInWatchlist(!inWatchlist);
-  };
-
-  const handleTrade = (type, quantity) => {
-    if (!stock) return;
-    try {
-      executeTrade(stock.symbol, quantity, stock.price, type);
-      setIsTradeModalOpen(false);
-      setCashBalance(getCashBalance()); // Refresh cash
-      alert(
-        `Successfully ${
-          type === "buy" ? "bought" : "sold"
-        } ${quantity} shares of ${stock.symbol}`
-      );
-    } catch (e) {
-      alert(e.message);
-    }
-  };
 
   if (!stock) {
     return (
@@ -122,7 +58,7 @@ const StockDetails = () => {
   }
 
   const isPositive = stock.change >= 0;
-  const peerStocks = stocks
+  const peerStocks = stocksList
     .filter((s) => s.sector === stock.sector && s.symbol !== stock.symbol)
     .slice(0, 3);
   const currentHolding = getHolding(stock.symbol);
