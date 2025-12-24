@@ -14,9 +14,34 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id          Int             @id @default(autoincrement())
+  email       String          @unique
+  username    String          @unique
+  password    String
+  createdAt   DateTime        @default(now())
+  cashBalance Decimal         @default(10000)
+  portfolio   PortfolioItem[]
+  watchlist   WatchlistItem[]
+}
+
+model PortfolioItem {
+  id          Int     @id @default(autoincrement())
+  symbol      String
+  quantity    Int
+  avgBuyPrice Decimal @db.Decimal(12, 4)
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([userId, symbol])
+}
+
+model WatchlistItem {
+  id     Int    @id @default(autoincrement())
+  symbol String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([userId, symbol])
 }
