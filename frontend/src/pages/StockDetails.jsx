@@ -20,7 +20,6 @@ const StockDetails = () => {
     stock,
     ticker,
     inWatchlist,
-    setInWatchlist,
     cashBalance,
     setCashBalance,
   } = useStockDetails();
@@ -37,8 +36,6 @@ const StockDetails = () => {
   const { toggleWatchlist, handleTrade } = useStockAction(
     ticker,
     stock,
-    inWatchlist,
-    setInWatchlist,
     setIsTradeModalOpen,
     setCashBalance
   );

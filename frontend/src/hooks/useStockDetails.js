@@ -3,9 +3,11 @@ import { StockContext } from "../contexts/StockContext";
 import { useParams } from "react-router";
 import { getStock } from "../lib/stockInfo";
 import { getCashBalance } from "../services/portfolioService";
+import { AuthContext } from "../contexts/AuthContext";
 
 export const useStockDetails = () => {
   const { stocks: stocksList } = useContext(StockContext);
+  const { currentUser } = useContext(AuthContext);
   const { ticker } = useParams();
   const [stock, setStock] = useState(undefined);
   const [inWatchlist, setInWatchlist] = useState(false);
@@ -16,20 +18,18 @@ export const useStockDetails = () => {
       const foundStock = getStock(stocksList, ticker.toUpperCase());
       setStock(foundStock);
 
-      // Check watchlist
-      const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
-      setInWatchlist(watchlist.includes(ticker.toUpperCase()));
+      const tickers = currentUser.watchlist.map((item) => item.symbol);
+      setInWatchlist(tickers.includes(ticker.toUpperCase()));
 
       setCashBalance(getCashBalance());
     }
-  }, [ticker]);
+  }, [ticker, currentUser]);
 
   return {
     stocksList,
     stock,
     ticker,
     inWatchlist,
-    setInWatchlist,
     cashBalance,
     setCashBalance,
   };

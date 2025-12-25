@@ -1,24 +1,26 @@
+import { useContext } from "react";
 import { executeTrade, getCashBalance } from "../services/portfolioService";
+import { AuthContext } from "../contexts/AuthContext";
+import apiRequest from "../lib/apiRequest";
 
 export const useStockAction = (
   ticker,
   stock,
-  inWatchlist,
-  setInWatchlist,
   setIsTradeModalOpen,
   setCashBalance
 ) => {
-  const toggleWatchlist = () => {
+  const { updateUser } = useContext(AuthContext);
+
+  const toggleWatchlist = async () => {
     if (!ticker) return;
-    const current = JSON.parse(localStorage.getItem("watchlist") || "[]");
-    let updated;
-    if (inWatchlist) {
-      updated = current.filter((t) => t !== ticker.toUpperCase());
-    } else {
-      updated = [...current, ticker.toUpperCase()];
+    try {
+      const response = await apiRequest.post("/stock-action/watchlist", {
+        symbol: ticker,
+      });
+      updateUser(response.data);
+    } catch (err) {
+      console.error(err);
     }
-    localStorage.setItem("watchlist", JSON.stringify(updated));
-    setInWatchlist(!inWatchlist);
   };
 
   const handleTrade = (type, quantity) => {

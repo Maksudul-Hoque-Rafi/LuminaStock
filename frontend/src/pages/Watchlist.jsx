@@ -2,26 +2,31 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Star, Trash2 } from "lucide-react";
 import { StockContext } from "../contexts/StockContext";
+import { AuthContext } from "../contexts/AuthContext";
+import apiRequest from "../lib/apiRequest";
 
 const Watchlist = () => {
   const { stocks: stocksList } = useContext(StockContext);
   const [watchlistStocks, setWatchlistStocks] = useState([]);
+  const { currentUser, updateUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const tickers = JSON.parse(localStorage.getItem("watchlist") || "[]");
+    const tickers = currentUser.watchlist.map((item) => item.symbol);
     const stocks = tickers
       .map((t) => stocksList.find((s) => s.symbol === t))
       .filter((s) => !!s);
     setWatchlistStocks(stocks);
-  }, []);
+  }, [currentUser]);
 
-  const removeFromWatchlist = (symbol) => {
-    const currentTickers = JSON.parse(
-      localStorage.getItem("watchlist") || "[]"
-    );
-    const newTickers = currentTickers.filter((t) => t !== symbol);
-    localStorage.setItem("watchlist", JSON.stringify(newTickers));
-    setWatchlistStocks(watchlistStocks.filter((s) => s.symbol !== symbol));
+  const removeFromWatchlist = async (symbol) => {
+    try {
+      const response = await apiRequest.post("/stock-action/watchlist", {
+        symbol,
+      });
+      updateUser(response.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (watchlistStocks.length === 0) {
@@ -90,7 +95,7 @@ const Watchlist = () => {
                 <td className="px-6 py-4 text-center">
                   <button
                     onClick={() => removeFromWatchlist(stock.symbol)}
-                    className="p-2 text-slate-400 hover:text-rose-500 transition-colors"
+                    className="cursor-pointer p-2 text-slate-400 hover:text-rose-500 transition-colors"
                   >
                     <Trash2 size={18} />
                   </button>
