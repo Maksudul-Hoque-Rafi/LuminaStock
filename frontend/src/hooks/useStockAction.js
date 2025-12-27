@@ -3,12 +3,7 @@ import { executeTrade, getCashBalance } from "../services/portfolioService";
 import { AuthContext } from "../contexts/AuthContext";
 import apiRequest from "../lib/apiRequest";
 
-export const useStockAction = (
-  ticker,
-  stock,
-  setIsTradeModalOpen,
-  setCashBalance
-) => {
+export const useStockAction = (ticker, stock, setIsTradeModalOpen) => {
   const { updateUser } = useContext(AuthContext);
 
   const toggleWatchlist = async () => {
@@ -28,7 +23,6 @@ export const useStockAction = (
     try {
       executeTrade(stock.symbol, quantity, stock.price, type);
       setIsTradeModalOpen(false);
-      setCashBalance(getCashBalance()); // Refresh cash
       alert(
         `Successfully ${
           type === "buy" ? "bought" : "sold"
