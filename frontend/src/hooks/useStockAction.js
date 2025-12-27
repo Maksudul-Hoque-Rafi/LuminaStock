@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { executeTrade, getCashBalance } from "../services/portfolioService";
 import { AuthContext } from "../contexts/AuthContext";
 import apiRequest from "../lib/apiRequest";
+import { error } from "console";
 
 export const useStockAction = (ticker, stock, setIsTradeModalOpen) => {
   const { updateUser } = useContext(AuthContext);
@@ -18,18 +19,32 @@ export const useStockAction = (ticker, stock, setIsTradeModalOpen) => {
     }
   };
 
-  const handleTrade = (type, quantity) => {
+  const handleTrade = async (type, quantity) => {
     if (!stock) return;
     try {
-      executeTrade(stock.symbol, quantity, stock.price, type);
-      setIsTradeModalOpen(false);
+      const response = await executeTrade(
+        stock.symbol,
+        quantity,
+        stock.price,
+        type
+      );
+
+      if (response.errorMessage) {
+        alert(response.errorMessage);
+        return;
+      }
+
+      updateUser(response.userInfo);
+
       alert(
         `Successfully ${
           type === "buy" ? "bought" : "sold"
         } ${quantity} shares of ${stock.symbol}`
       );
-    } catch (e) {
-      alert(e.message);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsTradeModalOpen(false);
     }
   };
 
