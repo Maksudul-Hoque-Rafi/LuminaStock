@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { X, Wallet, AlertCircle } from "lucide-react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export const TradeModal = ({
   isOpen,
   onClose,
   symbol,
   currentPrice,
-  cashBalance,
   onTrade,
 }) => {
   const [type, setType] = useState("buy");
   const [quantity, setQuantity] = useState(1);
-  const [error, setError] = useState("");
+
+  const { currentUser } = useContext(AuthContext);
+  const cashBalance = Number(currentUser.cashBalance);
 
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setType("buy");
       setQuantity(1);
-      setError("");
     }
   }, [isOpen]);
 
@@ -28,15 +29,6 @@ export const TradeModal = ({
   const canAfford = type === "sell" || totalCost <= cashBalance;
 
   const handleSubmit = () => {
-    if (quantity <= 0) {
-      setError("Quantity must be greater than 0");
-      return;
-    }
-    if (type === "buy" && !canAfford) {
-      setError("Insufficient funds");
-      return;
-    }
-    setError("");
     onTrade(type, quantity);
   };
 
@@ -106,7 +98,6 @@ export const TradeModal = ({
               onChange={(e) => {
                 const value = parseInt(e.target.value, 10);
                 setQuantity(Math.max(1, Number.isNaN(value) ? 0 : value));
-                setError("");
               }}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
@@ -128,9 +119,7 @@ export const TradeModal = ({
             <div className="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-200/50">
               <span>Estimated Total</span>
               <span
-                className={
-                  !canAfford && type === "buy" ? "text-rose-600" : ""
-                }
+                className={!canAfford && type === "buy" ? "text-rose-600" : ""}
               >
                 $
                 {totalCost.toLocaleString(undefined, {
@@ -146,12 +135,6 @@ export const TradeModal = ({
               </div>
             )}
           </div>
-
-          {error && (
-            <div className="text-sm text-rose-600 text-center font-medium bg-rose-50 p-2 rounded-lg">
-              {error}
-            </div>
-          )}
         </div>
 
         {/* Action Button */}
@@ -173,5 +156,3 @@ export const TradeModal = ({
     </div>
   );
 };
-
-

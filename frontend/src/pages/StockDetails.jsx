@@ -104,7 +104,6 @@ const StockDetails = () => {
         onClose={() => setIsTradeModalOpen(false)}
         symbol={stock.symbol}
         currentPrice={stock.price}
-        cashBalance={cashBalance}
         onTrade={handleTrade}
       />
     </div>
