@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { executeTrade, getCashBalance } from "../services/portfolioService";
 import { AuthContext } from "../contexts/AuthContext";
 import apiRequest from "../lib/apiRequest";
-import { error } from "console";
 
 export const useStockAction = (ticker, stock, setIsTradeModalOpen) => {
   const { updateUser } = useContext(AuthContext);
