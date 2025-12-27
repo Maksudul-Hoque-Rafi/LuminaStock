@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
-import { getHolding, getCashBalance } from "../services/portfolioService";
+import { getHolding } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
 import StockHeader from "../components/StockDetails/StockHeader";
 import PriceChart from "../components/StockDetails/PriceChart";
@@ -15,14 +15,7 @@ import { useStockAction } from "../hooks/useStockAction";
 const StockDetails = () => {
   const chartData = useLoaderData();
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
-  const {
-    stocksList,
-    stock,
-    ticker,
-    inWatchlist,
-    cashBalance,
-    setCashBalance,
-  } = useStockDetails();
+  const { stocksList, stock, ticker, inWatchlist } = useStockDetails();
 
   const {
     aiAnalysis,
@@ -36,8 +29,7 @@ const StockDetails = () => {
   const { toggleWatchlist, handleTrade } = useStockAction(
     ticker,
     stock,
-    setIsTradeModalOpen,
-    setCashBalance
+    setIsTradeModalOpen
   );
 
   useEffect(() => {
@@ -67,7 +59,6 @@ const StockDetails = () => {
         inWatchlist={inWatchlist}
         onToggleWatchlist={toggleWatchlist}
         onOpenTradeModal={() => {
-          setCashBalance(getCashBalance());
           setIsTradeModalOpen(true);
         }}
       />

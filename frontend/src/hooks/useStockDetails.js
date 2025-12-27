@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { StockContext } from "../contexts/StockContext";
 import { useParams } from "react-router";
 import { getStock } from "../lib/stockInfo";
-import { getCashBalance } from "../services/portfolioService";
 import { AuthContext } from "../contexts/AuthContext";
 
 export const useStockDetails = () => {
@@ -11,7 +10,6 @@ export const useStockDetails = () => {
   const { ticker } = useParams();
   const [stock, setStock] = useState(undefined);
   const [inWatchlist, setInWatchlist] = useState(false);
-  const [cashBalance, setCashBalance] = useState(0);
 
   useEffect(() => {
     if (ticker) {
@@ -20,8 +18,6 @@ export const useStockDetails = () => {
 
       const tickers = currentUser.watchlist.map((item) => item.symbol);
       setInWatchlist(tickers.includes(ticker.toUpperCase()));
-
-      setCashBalance(getCashBalance());
     }
   }, [ticker, currentUser]);
 
@@ -30,7 +26,5 @@ export const useStockDetails = () => {
     stock,
     ticker,
     inWatchlist,
-    cashBalance,
-    setCashBalance,
   };
 };
