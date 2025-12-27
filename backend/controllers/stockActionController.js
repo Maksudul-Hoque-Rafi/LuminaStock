@@ -21,7 +21,7 @@ export const toggleWatchList = async (req, res) => {
             },
           },
         },
-        include: { watchlist: true },
+        include: { watchlist: true, portfolio: true },
         omit: { password: true },
       });
       res.status(200).json(updatedUser);
@@ -30,7 +30,7 @@ export const toggleWatchList = async (req, res) => {
       const updatedUser = await prisma.user.update({
         where: { id: req.userId },
         data: { watchlist: { create: { symbol: req.body.symbol } } },
-        include: { watchlist: true },
+        include: { watchlist: true, portfolio: true },
         omit: { password: true },
       });
       res.status(201).json(updatedUser);
