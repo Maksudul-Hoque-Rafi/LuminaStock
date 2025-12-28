@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { executeTrade, getCashBalance } from "../services/portfolioService";
+import { executeTrade } from "../services/portfolioService";
 import { AuthContext } from "../contexts/AuthContext";
 import apiRequest from "../lib/apiRequest";
 

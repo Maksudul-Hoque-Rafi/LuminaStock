@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
-import { getHolding } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
 import StockHeader from "../components/StockDetails/StockHeader";
 import PriceChart from "../components/StockDetails/PriceChart";
