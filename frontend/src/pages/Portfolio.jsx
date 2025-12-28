@@ -1,38 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  getPortfolio,
-  savePortfolio,
-  executeTrade,
-  getCashBalance,
-} from "../services/portfolioService";
+import { executeTrade } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
 import SummaryCards from "../components/Portfolio/SummaryCards";
-import GrowthChart from "../components/Portfolio/GrowthChart";
 import AllocationChart from "../components/Portfolio/AllocationChart";
 import HoldingsTable from "../components/Portfolio/HoldingsTable";
 import { StockContext } from "../contexts/StockContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Portfolio = () => {
   const { stocks } = useContext(StockContext);
-  const [holdings, setHoldings] = useState([]);
+  const { currentUser, updateUser } = useContext(AuthContext);
   const [currentPrices, setCurrentPrices] = useState({});
-  const [cashBalance, setCashBalance] = useState(0);
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [selectedStockForTrade, setSelectedStockForTrade] = useState(null);
 
+  const cashBalance = Number(currentUser.cashBalance);
+  const holdings = currentUser.portfolio;
+
   useEffect(() => {
-    loadPortfolio();
+    updateCurrentPrices();
   }, []);
 
-  const loadPortfolio = () => {
-    const saved = getPortfolio();
-    const cash = getCashBalance();
-    setHoldings(saved);
-    setCashBalance(cash);
-
-    // Hydrate with current prices from mock data
+  const updateCurrentPrices = () => {
     const prices = {};
-    saved.forEach((item) => {
+    holdings.forEach((item) => {
       const stock = stocks.find((s) => s.symbol === item.symbol);
       if (stock) {
         prices[item.symbol] = stock.price;
@@ -46,47 +37,44 @@ const Portfolio = () => {
     setShowTradeModal(true);
   };
 
-  const handleTrade = (type, quantity) => {
+  const handleTrade = async (type, quantity) => {
     if (!selectedStockForTrade) return;
     try {
       const currentPrice =
         currentPrices[selectedStockForTrade.symbol] ||
         selectedStockForTrade.avgBuyPrice;
-      const updated = executeTrade(
+      const response = await executeTrade(
         selectedStockForTrade.symbol,
         quantity,
         currentPrice,
         type
       );
-      setHoldings(updated);
+      if (response.errorMessage) {
+        alert(response.errorMessage);
+        return;
+      }
+      updateUser(response.userInfo);
+      alert(
+        `Successfully ${
+          type === "buy" ? "bought" : "sold"
+        } ${quantity} shares of ${selectedStockForTrade.symbol}`
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
       setShowTradeModal(false);
-      loadPortfolio(); // Refresh data/charts and cash balance
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  const removeHolding = (symbol) => {
-    if (
-      window.confirm(
-        "Are you sure? This will remove the stock from your view but won't sell it for cash (use Trade > Sell for that)."
-      )
-    ) {
-      const updated = holdings.filter((h) => h.symbol !== symbol);
-      savePortfolio(updated);
-      setHoldings(updated);
-      loadPortfolio();
     }
   };
 
   // Calculations
   const portfolioValue = holdings.reduce(
     (sum, item) =>
-      sum + item.quantity * (currentPrices[item.symbol] || item.avgBuyPrice),
+      sum +
+      item.quantity * (currentPrices[item.symbol] || Number(item.avgBuyPrice)),
     0
   );
   const totalInvested = holdings.reduce(
-    (sum, item) => sum + item.quantity * item.avgBuyPrice,
+    (sum, item) => sum + item.quantity * Number(item.avgBuyPrice),
     0
   );
   const totalAccountValue = portfolioValue + cashBalance;
@@ -97,7 +85,7 @@ const Portfolio = () => {
 
   const pieData = holdings.map((h) => ({
     name: h.symbol,
-    value: h.quantity * (currentPrices[h.symbol] || h.avgBuyPrice),
+    value: h.quantity * (currentPrices[h.symbol] || Number(h.avgBuyPrice)),
   }));
   // Add cash to pie chart for completeness
   if (cashBalance > 0) {
@@ -121,7 +109,6 @@ const Portfolio = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* <GrowthChart growthData={growthData} /> */}
         <AllocationChart
           pieData={pieData}
           totalAccountValue={totalAccountValue}
@@ -133,7 +120,6 @@ const Portfolio = () => {
         currentPrices={currentPrices}
         cashBalance={cashBalance}
         onOpenTradeModal={openTradeModal}
-        onRemoveHolding={removeHolding}
       />
 
       {selectedStockForTrade && (

@@ -7,7 +7,6 @@ const HoldingsTable = ({
   currentPrices,
   cashBalance,
   onOpenTradeModal,
-  onRemoveHolding,
 }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
@@ -42,11 +41,13 @@ const HoldingsTable = ({
             <tbody className="divide-y divide-slate-100">
               {holdings.map((item) => {
                 const currPrice =
-                  currentPrices[item.symbol] || item.avgBuyPrice;
+                  currentPrices[item.symbol] || Number(item.avgBuyPrice);
                 const itemReturn =
-                  (currPrice - item.avgBuyPrice) * item.quantity;
+                  (currPrice - Number(item.avgBuyPrice)) * item.quantity;
                 const itemReturnPercent =
-                  ((currPrice - item.avgBuyPrice) / item.avgBuyPrice) * 100;
+                  ((currPrice - Number(item.avgBuyPrice)) /
+                    Number(item.avgBuyPrice)) *
+                  100;
                 const isPos = itemReturn >= 0;
 
                 return (
@@ -66,7 +67,7 @@ const HoldingsTable = ({
                       {item.quantity}
                     </td>
                     <td className="px-6 py-4 text-right text-slate-700">
-                      ${item.avgBuyPrice.toFixed(2)}
+                      ${Number(item.avgBuyPrice).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-slate-900">
                       ${currPrice.toFixed(2)}
@@ -85,13 +86,6 @@ const HoldingsTable = ({
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
                         Trade
-                      </button>
-                      <button
-                        onClick={() => onRemoveHolding(item.symbol)}
-                        className="text-slate-400 hover:text-rose-500 transition-colors"
-                        title="Remove holding from list (Does not sell)"
-                      >
-                        <Trash2 size={18} />
                       </button>
                     </td>
                   </tr>
