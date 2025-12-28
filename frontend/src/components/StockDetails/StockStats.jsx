@@ -18,7 +18,7 @@ const StockStats = ({ stock, currentHolding }) => {
           <div className="flex justify-between items-end">
             <span className="text-slate-600">Avg Cost</span>
             <span className="font-medium text-slate-900">
-              ${currentHolding.avgBuyPrice.toFixed(2)}
+              ${Number(currentHolding.avgBuyPrice).toFixed(2)}
             </span>
           </div>
         </div>

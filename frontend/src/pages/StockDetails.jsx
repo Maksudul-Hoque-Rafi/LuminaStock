@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { getHolding } from "../services/portfolioService";
 import { TradeModal } from "../components/TradeModal";
@@ -11,12 +11,14 @@ import NewsSection from "../components/StockDetails/NewsSection";
 import { useStockDetails } from "../hooks/useStockDetails";
 import { useStockAI } from "../hooks/useStockAI";
 import { useStockAction } from "../hooks/useStockAction";
+import { AuthContext } from "../contexts/AuthContext";
 
 const StockDetails = () => {
   const chartData = useLoaderData();
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
-  const { stocksList, stock, ticker, inWatchlist } = useStockDetails();
+  const { currentUser } = useContext(AuthContext);
 
+  const { stocksList, stock, ticker, inWatchlist } = useStockDetails();
   const {
     aiAnalysis,
     loadingAnalysis,
@@ -50,7 +52,10 @@ const StockDetails = () => {
   const peerStocks = stocksList
     .filter((s) => s.sector === stock.sector && s.symbol !== stock.symbol)
     .slice(0, 3);
-  const currentHolding = getHolding(stock.symbol);
+
+  const currentHolding = currentUser.portfolio.find(
+    (p) => p.symbol === stock.symbol
+  );
 
   return (
     <div className="space-y-8">
