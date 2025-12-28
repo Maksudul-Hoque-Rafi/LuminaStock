@@ -3,6 +3,10 @@ export const getStock = (stocksList, ticker) => {
 };
 
 export const formatMarketCap = (valueInMillions) => {
+  if (typeof valueInMillions === "string") {
+    return valueInMillions;
+  }
+
   const units = ["M", "B", "T"];
   let unitIndex = 0;
   let value = valueInMillions;
