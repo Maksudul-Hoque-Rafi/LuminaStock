@@ -16,7 +16,9 @@ export const useStockDetails = () => {
       const foundStock = getStock(stocksList, ticker.toUpperCase());
       setStock(foundStock);
 
-      const tickers = currentUser.watchlist.map((item) => item.symbol);
+      const tickers = currentUser
+        ? currentUser.watchlist.map((item) => item.symbol)
+        : [];
       setInWatchlist(tickers.includes(ticker.toUpperCase()));
     }
   }, [ticker, currentUser]);

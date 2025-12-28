@@ -52,9 +52,9 @@ const StockDetails = () => {
     .filter((s) => s.sector === stock.sector && s.symbol !== stock.symbol)
     .slice(0, 3);
 
-  const currentHolding = currentUser.portfolio.find(
-    (p) => p.symbol === stock.symbol
-  );
+  const currentHolding = currentUser
+    ? currentUser.portfolio.find((p) => p.symbol === stock.symbol)
+    : undefined;
 
   return (
     <div className="space-y-8">
@@ -93,14 +93,15 @@ const StockDetails = () => {
           />
         </div>
       </div>
-
-      <TradeModal
-        isOpen={isTradeModalOpen}
-        onClose={() => setIsTradeModalOpen(false)}
-        symbol={stock.symbol}
-        currentPrice={stock.price}
-        onTrade={handleTrade}
-      />
+      {currentUser && (
+        <TradeModal
+          isOpen={isTradeModalOpen}
+          onClose={() => setIsTradeModalOpen(false)}
+          symbol={stock.symbol}
+          currentPrice={stock.price}
+          onTrade={handleTrade}
+        />
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Star, DollarSign } from "lucide-react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const StockHeader = ({
   stock,
@@ -7,7 +8,24 @@ const StockHeader = ({
   onToggleWatchlist,
   onOpenTradeModal,
 }) => {
+  const { currentUser } = useContext(AuthContext);
   const isPositive = stock.change >= 0;
+
+  const handleWatchlist = () => {
+    if (!currentUser) {
+      alert("Please log in to add this stock to your watchlist.");
+      return;
+    }
+    onToggleWatchlist();
+  };
+
+  const handleBuySell = () => {
+    if (!currentUser) {
+      alert("Please log in to execute buy or sell operation");
+      return;
+    }
+    onOpenTradeModal();
+  };
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -36,8 +54,8 @@ const StockHeader = ({
       </div>
       <div className="flex gap-3 w-full md:w-auto">
         <button
-          onClick={onToggleWatchlist}
-          className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg border font-medium transition-colors ${
+          onClick={handleWatchlist}
+          className={`cursor-pointer flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg border font-medium transition-colors ${
             inWatchlist
               ? "bg-yellow-50 border-yellow-200 text-yellow-700"
               : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
@@ -47,8 +65,8 @@ const StockHeader = ({
           {inWatchlist ? "Watchlisted" : "Watchlist"}
         </button>
         <button
-          onClick={onOpenTradeModal}
-          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+          onClick={handleBuySell}
+          className="cursor-pointer flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
         >
           <DollarSign size={18} />
           Buy / Sell
