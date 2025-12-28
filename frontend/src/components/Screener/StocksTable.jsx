@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 import { Filter } from "lucide-react";
+import { formatMarketCap } from "../../lib/stockInfo";
 
 const StocksTable = ({ filteredStocks, onClearFilters }) => {
-  console.log("Filtered stocks are ", filteredStocks);
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
       <div className="overflow-x-auto">
@@ -50,7 +50,7 @@ const StocksTable = ({ filteredStocks, onClearFilters }) => {
                     {stock.change > 0 ? "+" : "-"}${Math.abs(stock.change)}
                   </td>
                   <td className="px-6 py-4 text-right text-slate-600">
-                    {stock.marketCap}
+                    {formatMarketCap(stock.marketCap)}
                   </td>
                 </tr>
               ))

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import { Scale } from "lucide-react";
+import { formatMarketCap } from "../../lib/stockInfo";
 
 const PeerComparison = ({ peerStocks }) => {
   if (!peerStocks || peerStocks.length === 0) return null;
@@ -33,7 +34,7 @@ const PeerComparison = ({ peerStocks }) => {
                 </td>
                 <td className="py-3 text-right">${peer.price.toFixed(2)}</td>
                 <td className="py-3 text-right text-slate-600">
-                  {peer.marketCap}
+                  {formatMarketCap(peer.marketCap)}
                 </td>
               </tr>
             ))}

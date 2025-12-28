@@ -32,7 +32,7 @@ export const getStockData = async (ticker) => {
       price: quote.c,
       change: quote.d,
       changePercent: quote.dp,
-      marketCap: profile.marketCapitalization + "B",
+      marketCap: profile.marketCapitalization,
       sector: profile.finnhubIndustry,
       isMock: false,
     };
