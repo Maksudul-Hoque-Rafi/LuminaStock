@@ -17,12 +17,8 @@ const Portfolio = () => {
   const [holdings, setHoldings] = useState([]);
   const [currentPrices, setCurrentPrices] = useState({});
   const [cashBalance, setCashBalance] = useState(0);
-
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [selectedStockForTrade, setSelectedStockForTrade] = useState(null);
-
-  // Mock Growth Data
-  const [growthData, setGrowthData] = useState([]);
 
   useEffect(() => {
     loadPortfolio();
@@ -43,42 +39,6 @@ const Portfolio = () => {
       }
     });
     setCurrentPrices(prices);
-
-    // Calculate Portfolio Value (Stocks only) for graph
-    const portfolioVal = saved.reduce(
-      (sum, item) =>
-        sum + item.quantity * (prices[item.symbol] || item.avgBuyPrice),
-      0
-    );
-    const totalAccountVal = portfolioVal + cash;
-
-    const data = [];
-    if (totalAccountVal > 0) {
-      const today = new Date();
-      let currentVal = totalAccountVal;
-      const points = [];
-
-      // Generate 30 days of data backwards from today
-      for (let i = 0; i < 30; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-
-        points.push({
-          date: date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          }),
-          value: currentVal,
-        });
-
-        // Reverse random walk to simulate history
-        // Volatility approx 1-2%
-        const change = 1 + (Math.random() - 0.5) * 0.02;
-        currentVal = currentVal / change;
-      }
-      data.push(...points.reverse());
-    }
-    setGrowthData(data);
   };
 
   const openTradeModal = (item) => {
@@ -161,7 +121,7 @@ const Portfolio = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <GrowthChart growthData={growthData} />
+        {/* <GrowthChart growthData={growthData} /> */}
         <AllocationChart
           pieData={pieData}
           totalAccountValue={totalAccountValue}
