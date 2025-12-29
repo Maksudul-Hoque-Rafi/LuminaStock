@@ -9,6 +9,8 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("user")) || null
   );
 
+  const [logoutAction, setLogoutAction] = useState(false);
+
   const updateUser = (data) => {
     setCurrentUser(data);
   };
@@ -20,6 +22,8 @@ export const AuthContextProvider = ({ children }) => {
       value={{
         currentUser,
         updateUser,
+        logoutAction,
+        setLogoutAction,
       }}
     >
       {children}

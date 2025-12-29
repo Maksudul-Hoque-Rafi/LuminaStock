@@ -6,10 +6,19 @@ import StockTable from "../components/Home/StockTable";
 import QuickLinks from "../components/Home/QuickLinks";
 import { useLoaderData } from "react-router";
 import { StockContext } from "../contexts/StockContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Home = () => {
   const stocksList = useLoaderData();
   const { setStocks } = useContext(StockContext);
+  const { updateUser, logoutAction, setLogoutAction } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (logoutAction) {
+      updateUser(null);
+      setLogoutAction(false);
+    }
+  }, [logoutAction]);
 
   useEffect(() => {
     setStocks(stocksList);

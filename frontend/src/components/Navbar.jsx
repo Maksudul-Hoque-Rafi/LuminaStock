@@ -17,7 +17,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import apiRequest from "../lib/apiRequest";
 
 const Navbar = () => {
-  const { currentUser, updateUser } = useContext(AuthContext);
+  const { currentUser, updateUser, setLogoutAction } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,13 +36,15 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await apiRequest.post("/auth/logout");
-      updateUser(null);
       if (
         location.pathname === "/portfolio" ||
         location.pathname === "/watchlist"
       ) {
         navigate("/");
+        setLogoutAction(true);
+        return;
       }
+      updateUser(null);
     } catch (error) {
       console.error(error);
     }
