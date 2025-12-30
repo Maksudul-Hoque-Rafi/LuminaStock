@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getAIStockAnalysis, getAIStockNews } from "../services/geminiService";
 
-export const useStockAI = () => {
+export const useStockAI = (stock) => {
   const [aiAnalysis, setAiAnalysis] = useState("");
   const [stockNews, setStockNews] = useState([]);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);

@@ -25,7 +25,7 @@ const StockDetails = () => {
     loadingNews,
     fetchStockNews,
     handleAIAnalysis,
-  } = useStockAI();
+  } = useStockAI(stock);
 
   const { toggleWatchlist, handleTrade } = useStockAction(
     ticker,
