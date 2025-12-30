@@ -45,7 +45,7 @@ export const getAILearningContent = async (topic) => {
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: geminiModel,
       contents: prompt,
     });
 
@@ -103,7 +103,7 @@ export const getAIMarketNewsSummary = async () => {
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: geminiModel,
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
