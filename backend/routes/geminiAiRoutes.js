@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/stock-analysis", stockAnalysis);
 router.post("/learning-content", learningContent);
-router.post("/market-news", marketNews);
+router.get("/market-news", marketNews);
 router.post("/stock-news", stockNews);
 
 export default router;
