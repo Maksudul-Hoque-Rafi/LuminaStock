@@ -41,7 +41,12 @@ export const login = async (req, res) => {
       expiresIn: "7d",
     });
     res
-      .cookie("token", token, { httpOnly: true, maxAge: age })
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: age,
+        secure: true,
+        sameSite: "None",
+      })
       .status(200)
       .json(userInfo);
   } catch (error) {
