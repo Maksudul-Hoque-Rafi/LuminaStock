@@ -23,14 +23,15 @@ const MarketCard = ({ title, value, change, isPositive }) => (
 const MarketOverview = () => {
   return (
     <div>
-      <h2 className="text-xl font-bold text-slate-900 mb-4">Market Overview</h2>
+      <h2 className="text-xl font-bold text-slate-900">Market Overview</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/*
-        Market cards are currently static.
+        Market overview cards are commented out because they currently rely on
+        static/mock data.
         A reliable free API for real-time index and commodity data
         (S&P 500, NASDAQ, Dow Jones, Gold) is not available.
         */}
-        <MarketCard
+        {/* <MarketCard
           title="S&P 500"
           value="4,450.32"
           change="+1.25%"
@@ -53,7 +54,7 @@ const MarketOverview = () => {
           value="$1,920.50"
           change="+0.10%"
           isPositive={true}
-        />
+        /> */}
       </div>
     </div>
   );
