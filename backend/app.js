@@ -21,5 +21,5 @@ app.use("/api/stock-action", stockActionRoute);
 app.use("/api/gemini-ai", geminiAiRoute);
 
 app.listen(port, () => {
-  console.log("Server is running at 8000");
+  console.log(`Server is running at ${port}`);
 });
