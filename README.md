@@ -30,11 +30,16 @@ A modern, full-stack stock trading and portfolio management application built wi
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
 - **Prisma** - Next-generation ORM for database management
-- **PostgreSQL** - Robust relational database
+- **PostgreSQL** - Robust relational database (Neon)
 - **JWT** - JSON Web Tokens for authentication
 - **bcrypt** - Password hashing
 - **Finnhub API** - Real-time stock market data
 - **Google Gemini AI** - AI-powered stock analysis
+
+### DevOps & Deployment
+
+- **Docker** - Container platform for application deployment
+- **Docker Compose** - Multi-container orchestration
 
 ## 📁 Project Structure
 
@@ -43,12 +48,15 @@ LuminaStock/
 ├── backend/
 │   ├── controllers/     # Route controllers
 │   ├── middleware/      # Custom middleware
-│   ├── package.json     # Backend dependencies and scripts
+│   ├── generated/       # Generated Prisma files
+│   ├── lib/             # Utility functions
 │   ├── prisma/          # Database schema and migrations
 │   ├── routes/          # API routes
 │   ├── services/        # Business logic services
-│   ├── lib/             # Utility functions
-│   └── app.js           # Main application file
+│   ├── app.js           # Main application file
+│   ├── package.json     # Backend dependencies
+│   ├── Dockerfile       # Docker configuration for backend
+│   └── .dockerignore    # Docker ignore rules
 ├── frontend/
 │   ├── public/          # Static assets
 │   ├── src/
@@ -58,8 +66,12 @@ LuminaStock/
 │   │   ├── hooks/       # Custom React hooks
 │   │   ├── lib/         # Utility functions
 │   │   └── services/    # API service functions
-│   └── package.json
-└── README.md
+│   ├── package.json     # Frontend dependencies
+│   ├── Dockerfile       # Docker configuration for frontend
+│   ├── .dockerignore    # Docker ignore rules
+│   └── vite.config.js   # Vite configuration
+├── docker-compose.yml   # Docker Compose orchestration
+└── README.md            # Project documentation
 ```
 
 ## 🗄️ Database Schema
@@ -74,8 +86,9 @@ The application uses PostgreSQL with Prisma ORM. Key models include:
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- PostgreSQL database
+- Node.js (v16 or higher) - for local development
+- Docker & Docker Compose - for containerized deployment
+- Neon PostgreSQL database account
 - Finnhub API key
 - Google Gemini API key
 
@@ -97,6 +110,8 @@ The application uses PostgreSQL with Prisma ORM. Key models include:
    Create a `.env` file in the backend directory with:
 
    ```env
+   PORT=8000
+   CLIENT_URL=http://localhost:3000
    DATABASE_URL="postgresql://username:password@localhost:5432/luminastock"
    JWT_SECRET="your-jwt-secret-key"
    FINNHUB_API_KEY="your-finnhub-api-key"
@@ -144,6 +159,52 @@ The application uses PostgreSQL with Prisma ORM. Key models include:
 4. Start the development server:
    ```bash
    npm run dev
+   ```
+
+## 🐳 Docker Setup
+
+To run the application using Docker and Docker Compose:
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Neon PostgreSQL database connection string
+- API keys for Finnhub and Google Gemini
+
+### Steps
+
+1. Create a `.env` file in the `backend` directory with your backend environment variables:
+
+   ```env
+   DATABASE_URL="postgresql://user:password@host:port/database"
+   PORT=8000
+   CLIENT_URL=http://localhost:3000
+   JWT_SECRET="your-jwt-secret-key"
+   FINNHUB_API_KEY="your-finnhub-api-key"
+   GEMINI_API_KEY="your-gemini-api-key"
+   ```
+
+2. Create a `.env` file in the `frontend` directory with your frontend environment variables:
+
+   ```env
+   VITE_API_BASE_URL="http://localhost:8000"
+   ```
+
+3. Build and start the services:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+4. Access the application:
+
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+
+5. Stop the services:
+
+   ```bash
+   docker-compose down
    ```
 
 ## 🚀 Usage
